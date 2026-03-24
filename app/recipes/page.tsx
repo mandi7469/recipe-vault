@@ -27,9 +27,7 @@ export default async function RecipesPage() {
         {recipes.map((recipe: any) => (
           <Link key={recipe._id} href={`/recipes/${recipe._id}`}>
             <div className="rounded-lg border border-emerald-200 bg-white p-4 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:border-emerald-400 hover:shadow-lg cursor-pointer">
-              <h2 className="text-xl font-semibold">
-                {recipe.title}
-              </h2>
+              <h2 className="text-xl font-semibold">{recipe.title}</h2>
 
               <p className="text-gray-600">{recipe.description}</p>
             </div>

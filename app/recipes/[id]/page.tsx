@@ -1,3 +1,6 @@
+import Link from "next/link";
+import { redirect } from "next/navigation";
+
 async function getRecipe(id: string) {
   const res = await fetch(`http://localhost:3000/api/recipes/${id}`, {
     cache: "no-store",
@@ -18,9 +21,40 @@ export default async function RecipePage({
   const { id } = await params;
   const recipe = await getRecipe(id);
 
+  async function handleDelete() {
+    "use server";
+
+    await fetch(`http://localhost:3000/api/recipes/${id}`, {
+      method: "DELETE",
+      cache: "no-store",
+    });
+
+    redirect("/recipes");
+  }
+
   return (
     <section className="max-w-3xl">
-      <h1 className="text-4xl font-bold">{recipe.title}</h1>
+      <div className="flex items-start justify-between gap-4">
+        <h1 className="text-4xl font-bold text-emerald-700">{recipe.title}</h1>
+
+        <div className="flex gap-3">
+          <Link
+            href={`/recipes/${id}/edit`}
+            className="rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+          >
+            Edit
+          </Link>
+
+          <form action={handleDelete}>
+            <button
+              type="submit"
+              className="rounded-md bg-red-600 px-4 py-2 text-white hover:bg-red-700"
+            >
+              Delete
+            </button>
+          </form>
+        </div>
+      </div>
 
       <p className="mt-4 text-lg text-gray-700">{recipe.description}</p>
 
