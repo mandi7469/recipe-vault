@@ -21,7 +21,20 @@ export default async function RecipesPage() {
 
       <div className="mt-6 grid gap-4">
         {recipes.length === 0 && (
-          <p className="text-gray-500">No recipes yet.</p>
+          <div className="rounded-lg border border-dashed border-emerald-300 bg-white p-8 text-center">
+            <h2 className="text-xl font-semibold text-emerald-700">
+              No recipes yet
+            </h2>
+            <p className="mt-2 text-gray-600">
+              Start building your collection by adding your first recipe.
+            </p>
+            <Link
+              href="/recipes/new"
+              className="mt-4 inline-block rounded-md bg-emerald-600 px-4 py-2 text-white hover:bg-emerald-700"
+            >
+              Add Your First Recipe
+            </Link>
+          </div>
         )}
 
         {recipes.map((recipe: any) => (

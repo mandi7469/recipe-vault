@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import DeleteRecipeButton from "@/components/DeleteRecipeButton";
 
 async function getRecipe(id: string) {
   const res = await fetch(`http://localhost:3000/api/recipes/${id}`, {
@@ -46,12 +47,7 @@ export default async function RecipePage({
           </Link>
 
           <form action={handleDelete}>
-            <button
-              type="submit"
-              className="rounded-md bg-red-600 px-4 py-2 text-white hover:bg-red-700"
-            >
-              Delete
-            </button>
+            <DeleteRecipeButton />
           </form>
         </div>
       </div>
