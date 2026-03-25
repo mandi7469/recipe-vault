@@ -1,65 +1,102 @@
+"use client";
+
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import { RECIPE_CATEGORIES } from "@/lib/constants";
 
-async function getRecipes() {
-  const res = await fetch("http://localhost:3000/api/recipes", {
-    cache: "no-store",
-  });
+export default function RecipesPage() {
+  const [recipes, setRecipes] = useState([]);
+  const [search, setSearch] = useState("");
+  const [category, setCategory] = useState("");
+  const [difficulty, setDifficulty] = useState("");
+  const [sort, setSort] = useState("newest");
 
-  if (!res.ok) {
-    throw new Error("Failed to fetch recipes");
+  async function fetchRecipes() {
+    const params = new URLSearchParams({
+      search,
+      category,
+      difficulty,
+      sort,
+    });
+
+    const res = await fetch(`/api/recipes?${params.toString()}`);
+    const data = await res.json();
+
+    setRecipes(data);
   }
 
-  return res.json();
-}
-
-export default async function RecipesPage() {
-  const recipes = await getRecipes();
+  useEffect(() => {
+    fetchRecipes();
+  }, [search, category, difficulty, sort]);
 
   return (
     <section>
       <h1 className="text-3xl font-bold">Recipes</h1>
 
+      {/* Controls */}
+      <div className="mt-4 grid gap-3 md:grid-cols-4">
+        <input
+          type="text"
+          placeholder="Search recipes..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="rounded-md border border-gray-300 p-2"
+        />
+
+        <select
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+          className="rounded-md border border-gray-300 p-2"
+        >
+          <option value="">All Categories</option>
+          {RECIPE_CATEGORIES.map((cat) => (
+            <option key={cat} value={cat}>
+              {cat}
+            </option>
+          ))}
+        </select>
+
+        <select
+          value={difficulty}
+          onChange={(e) => setDifficulty(e.target.value)}
+          className="rounded-md border border-gray-300 p-2"
+        >
+          <option value="">All Difficulty</option>
+          <option value="Easy">Easy</option>
+          <option value="Medium">Medium</option>
+          <option value="Hard">Hard</option>
+        </select>
+
+        <select
+          value={sort}
+          onChange={(e) => setSort(e.target.value)}
+          className="rounded-md border border-gray-300 p-2"
+        >
+          <option value="newest">Newest</option>
+          <option value="prepTime">Prep Time</option>
+          <option value="cookTime">Cook Time</option>
+        </select>
+      </div>
+
+      {/* Results */}
       <div className="mt-6 grid gap-4">
         {recipes.length === 0 && (
-          <div className="rounded-lg border border-dashed border-emerald-300 bg-white p-8 text-center">
-            <h2 className="text-xl font-semibold text-emerald-700">
-              No recipes yet
-            </h2>
-            <p className="mt-2 text-gray-600">
-              Start building your collection by adding your first recipe.
-            </p>
-            <Link
-              href="/recipes/new"
-              className="mt-4 inline-block rounded-md bg-emerald-600 px-4 py-2 text-white hover:bg-emerald-700"
-            >
-              Add Your First Recipe
-            </Link>
-          </div>
+          <p className="text-gray-500">No matching recipes found.</p>
         )}
 
         {recipes.map((recipe: any) => (
           <Link key={recipe._id} href={`/recipes/${recipe._id}`}>
-            <div className="cursor-pointer rounded-lg border border-emerald-200 bg-white p-4 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:border-emerald-400 hover:shadow-lg">
-              <div className="flex items-start justify-between gap-4">
-                <h2 className="text-xl font-semibold text-emerald-700">
-                  {recipe.title}
-                </h2>
+            <div className="cursor-pointer rounded-lg border border-emerald-200 bg-white p-4 shadow-sm transition hover:shadow-md">
+              <h2 className="text-xl font-semibold text-emerald-700">
+                {recipe.title}
+              </h2>
 
-                {recipe.difficulty && (
-                  <span className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-medium text-emerald-700">
-                    {recipe.difficulty}
-                  </span>
-                )}
-              </div>
+              <p className="text-gray-600">{recipe.description}</p>
 
-              {recipe.description && (
-                <p className="mt-2 text-gray-600">{recipe.description}</p>
-              )}
-
-              <div className="mt-4 flex flex-wrap gap-3 text-sm text-gray-500">
-                {recipe.category && <span>Category: {recipe.category}</span>}
-                {recipe.prepTime && <span>Prep: {recipe.prepTime} min</span>}
-                {recipe.servings && <span>Servings: {recipe.servings}</span>}
+              <div className="mt-2 text-sm text-gray-500 flex gap-3">
+                {recipe.category && <span>{recipe.category}</span>}
+                {recipe.prepTime && <span>{recipe.prepTime} min</span>}
+                {recipe.difficulty && <span>{recipe.difficulty}</span>}
               </div>
             </div>
           </Link>

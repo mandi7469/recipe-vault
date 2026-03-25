@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { RECIPE_CATEGORIES } from "@/lib/constants";
 
 type Ingredient = {
   name: string;
@@ -181,13 +182,18 @@ export default function NewRecipePage() {
             <label className="mb-1 block text-sm font-medium text-gray-700">
               Category
             </label>
-            <input
-              type="text"
-              placeholder="Ex: Dinner"
+            <select
               value={category}
               onChange={(e) => setCategory(e.target.value)}
               className="w-full rounded-md border border-gray-300 bg-white p-2"
-            />
+            >
+              <option value="">Select a category</option>
+              {RECIPE_CATEGORIES.map((cat) => (
+                <option key={cat} value={cat}>
+                  {cat}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
 
