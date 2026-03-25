@@ -39,10 +39,28 @@ export default async function RecipesPage() {
 
         {recipes.map((recipe: any) => (
           <Link key={recipe._id} href={`/recipes/${recipe._id}`}>
-            <div className="rounded-lg border border-emerald-200 bg-white p-4 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:border-emerald-400 hover:shadow-lg cursor-pointer">
-              <h2 className="text-xl font-semibold">{recipe.title}</h2>
+            <div className="cursor-pointer rounded-lg border border-emerald-200 bg-white p-4 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:border-emerald-400 hover:shadow-lg">
+              <div className="flex items-start justify-between gap-4">
+                <h2 className="text-xl font-semibold text-emerald-700">
+                  {recipe.title}
+                </h2>
 
-              <p className="text-gray-600">{recipe.description}</p>
+                {recipe.difficulty && (
+                  <span className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-medium text-emerald-700">
+                    {recipe.difficulty}
+                  </span>
+                )}
+              </div>
+
+              {recipe.description && (
+                <p className="mt-2 text-gray-600">{recipe.description}</p>
+              )}
+
+              <div className="mt-4 flex flex-wrap gap-3 text-sm text-gray-500">
+                {recipe.category && <span>Category: {recipe.category}</span>}
+                {recipe.prepTime && <span>Prep: {recipe.prepTime} min</span>}
+                {recipe.servings && <span>Servings: {recipe.servings}</span>}
+              </div>
             </div>
           </Link>
         ))}
