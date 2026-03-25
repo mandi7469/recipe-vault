@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/mongodb";
 import Recipe from "@/models/Recipe";
 
-// GET all recipes with optional search, filter, and sort
+// GET all recipes with search, filter, sort, and pagination
 export async function GET(req: Request) {
   await connectToDatabase();
 
@@ -12,6 +12,8 @@ export async function GET(req: Request) {
   const category = searchParams.get("category") || "";
   const difficulty = searchParams.get("difficulty") || "";
   const sort = searchParams.get("sort") || "newest";
+  const page = Number(searchParams.get("page") || "1");
+  const limit = Number(searchParams.get("limit") || "5");
 
   const query: any = {};
 
@@ -40,9 +42,19 @@ export async function GET(req: Request) {
     sortOption = { cookTime: 1 };
   }
 
-  const recipes = await Recipe.find(query).sort(sortOption);
+  const skip = (page - 1) * limit;
 
-  return NextResponse.json(recipes);
+  const [recipes, total] = await Promise.all([
+    Recipe.find(query).sort(sortOption).skip(skip).limit(limit),
+    Recipe.countDocuments(query),
+  ]);
+
+  return NextResponse.json({
+    recipes,
+    total,
+    page,
+    totalPages: Math.ceil(total / limit),
+  });
 }
 
 // POST new recipe
