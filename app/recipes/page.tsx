@@ -12,6 +12,7 @@ type Recipe = {
   description?: string;
   category?: string;
   prepTime?: number;
+  cookTime?: number;
   difficulty?: string;
 };
 
@@ -32,6 +33,14 @@ export default function RecipesPage() {
   const [page, setPage] = useState(Number(searchParams.get("page") || "1"));
 
   const debouncedSearch = useDebounce(search, 400);
+
+  function clearFilters() {
+    setSearch("");
+    setCategory("");
+    setDifficulty("");
+    setSort("newest");
+    setPage(1);
+  }
 
   useEffect(() => {
     const params = new URLSearchParams();
@@ -71,6 +80,40 @@ export default function RecipesPage() {
     setPage(1);
   }, [debouncedSearch, category, difficulty, sort]);
 
+  function getVisiblePages(currentPage: number, totalPages: number) {
+    const windowSize = 2;
+
+    let start = currentPage;
+    let end = currentPage + windowSize - 1;
+
+    if (end > totalPages) {
+      end = totalPages;
+      start = Math.max(1, end - windowSize + 1);
+    }
+
+    const pages: (number | string)[] = [];
+
+    if (start > 1) {
+      pages.push(1);
+      if (start > 2) {
+        pages.push("...");
+      }
+    }
+
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
+
+    if (end < totalPages) {
+      if (end < totalPages - 1) {
+        pages.push("...");
+      }
+      pages.push(totalPages);
+    }
+
+    return pages;
+  }
+
   return (
     <section>
       <div className="flex items-center justify-between gap-4">
@@ -78,7 +121,7 @@ export default function RecipesPage() {
         <p className="text-sm text-gray-500">Showing 5 per page</p>
       </div>
 
-      <div className="mt-4 grid gap-3 md:grid-cols-4">
+      <div className="mt-4 grid gap-3 md:grid-cols-5">
         <input
           type="text"
           placeholder="Search recipes..."
@@ -120,6 +163,13 @@ export default function RecipesPage() {
           <option value="prepTime">Prep Time</option>
           <option value="cookTime">Cook Time</option>
         </select>
+        <button
+          type="button"
+          onClick={clearFilters}
+          className="rounded-md border border-gray-300 bg-white px-4 py-2 text-gray-700 hover:bg-gray-50"
+        >
+          Clear Filters
+        </button>
       </div>
 
       <div className="mt-6 grid gap-4">
@@ -140,7 +190,8 @@ export default function RecipesPage() {
 
               <div className="mt-2 flex gap-3 text-sm text-gray-500">
                 {recipe.category && <span>{recipe.category}</span>}
-                {recipe.prepTime && <span>{recipe.prepTime} min</span>}
+                {recipe.prepTime && <span>{recipe.prepTime} min prep</span>}
+                {recipe.cookTime && <span>{recipe.cookTime} min cook</span>}
                 {recipe.difficulty && <span>{recipe.difficulty}</span>}
               </div>
             </div>
@@ -149,7 +200,7 @@ export default function RecipesPage() {
       </div>
 
       {totalPages > 1 && (
-        <div className="mt-8 flex items-center justify-center gap-3">
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
           <button
             onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
             disabled={page === 1}
@@ -158,9 +209,25 @@ export default function RecipesPage() {
             Previous
           </button>
 
-          <span className="text-sm text-gray-600">
-            Page {page} of {totalPages}
-          </span>
+          {getVisiblePages(page, totalPages).map((item, index) =>
+            item === "..." ? (
+              <span key={`ellipsis-${index}`} className="px-2 text-gray-500">
+                ...
+              </span>
+            ) : (
+              <button
+                key={item}
+                onClick={() => setPage(item as number)}
+                className={`rounded-md px-4 py-2 ${
+                  page === item
+                    ? "bg-emerald-600 text-white"
+                    : "border border-gray-300 bg-white text-gray-700 hover:bg-gray-50"
+                }`}
+              >
+                {item}
+              </button>
+            ),
+          )}
 
           <button
             onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
