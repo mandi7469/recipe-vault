@@ -17,12 +17,14 @@ export default async function Navbar() {
             Home
           </Link>
 
-          <Link href="/recipes" className="hover:text-emerald-600">
-            Recipes
-          </Link>
-
           {session?.user ? (
             <>
+              <Link href="/recipes" className="hover:text-emerald-600">
+                Recipes
+              </Link>
+              <Link href="/my-recipes" className="hover:text-emerald-600">
+                My Recipes
+              </Link>
               <Link
                 href="/recipes/new"
                 className="rounded-md bg-emerald-600 px-4 py-2 text-white hover:bg-emerald-700"
@@ -36,6 +38,9 @@ export default async function Navbar() {
             </>
           ) : (
             <>
+              <Link href="/recipes" className="hover:text-emerald-600">
+                Recipes
+              </Link>
               <Link href="/signup" className="hover:text-emerald-600">
                 Sign Up
               </Link>

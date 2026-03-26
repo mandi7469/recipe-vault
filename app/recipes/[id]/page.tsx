@@ -1,18 +1,20 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
+import { connectToDatabase } from "@/lib/mongodb";
+import Recipe from "@/models/Recipe";
 import DeleteRecipeButton from "@/components/DeleteRecipeButton";
 
 async function getRecipe(id: string) {
-  const res = await fetch(`http://localhost:3000/api/recipes/${id}`, {
-    cache: "no-store",
-  });
+  await connectToDatabase();
 
-  if (!res.ok) {
+  const recipe = await Recipe.findById(id);
+
+  if (!recipe) {
     throw new Error("Failed to fetch recipe");
   }
 
-  return res.json();
+  return JSON.parse(JSON.stringify(recipe));
 }
 
 export default async function RecipePage({
@@ -35,15 +37,19 @@ export default async function RecipePage({
       redirect(`/login?callbackUrl=/recipes/${id}`);
     }
 
-    const res = await fetch(`http://localhost:3000/api/recipes/${id}`, {
-      method: "DELETE",
-      cache: "no-store",
-    });
+    await connectToDatabase();
 
-    if (!res.ok) {
-      const data = await res.json().catch(() => null);
-      throw new Error(data?.error || "Failed to delete recipe");
+    const recipeToDelete = await Recipe.findById(id);
+
+    if (!recipeToDelete) {
+      redirect("/recipes");
     }
+
+    if (recipeToDelete.userId?.toString() !== currentSession.user.id) {
+      throw new Error("You are not allowed to delete this recipe.");
+    }
+
+    await Recipe.findByIdAndDelete(id);
 
     redirect("/recipes");
   }
