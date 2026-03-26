@@ -16,11 +16,14 @@ export default function Navbar() {
           <Link href="/recipes" className="hover:text-emerald-600">
             Recipes
           </Link>
+          <Link href="/signup" className="hover:text-emerald-600">
+            Sign Up
+          </Link>
           <Link
-            href="/recipes/new"
+            href="/login"
             className="rounded-md bg-emerald-600 px-4 py-2 text-white hover:bg-emerald-700"
           >
-            Add Recipe
+            Log In
           </Link>
         </div>
       </nav>
