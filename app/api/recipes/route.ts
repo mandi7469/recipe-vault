@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { connectToDatabase } from "@/lib/mongodb";
 import Recipe from "@/models/Recipe";
+import { auth } from "@/auth";
 
 // GET all recipes with search, filter, sort, and pagination
 export async function GET(req: Request) {
@@ -57,13 +58,25 @@ export async function GET(req: Request) {
   });
 }
 
-// POST new recipe
+// POST create a new recipe (requires authentication)
 export async function POST(req: Request) {
   await connectToDatabase();
 
+  const session = await auth();
+
+  if (!session?.user?.id) {
+    return NextResponse.json(
+      { error: "You must be logged in to create a recipe." },
+      { status: 401 },
+    );
+  }
+
   const data = await req.json();
 
-  const newRecipe = await Recipe.create(data);
+  const newRecipe = await Recipe.create({
+    ...data,
+    userId: session.user.id,
+  });
 
   return NextResponse.json(newRecipe, { status: 201 });
 }

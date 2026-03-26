@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { auth } from "@/auth";
 import DeleteRecipeButton from "@/components/DeleteRecipeButton";
 
 async function getRecipe(id: string) {
@@ -21,14 +22,28 @@ export default async function RecipePage({
 }) {
   const { id } = await params;
   const recipe = await getRecipe(id);
+  const session = await auth();
+
+  const isOwner = session?.user?.id === recipe.userId?.toString();
 
   async function handleDelete() {
     "use server";
 
-    await fetch(`http://localhost:3000/api/recipes/${id}`, {
+    const currentSession = await auth();
+
+    if (!currentSession?.user?.id) {
+      redirect(`/login?callbackUrl=/recipes/${id}`);
+    }
+
+    const res = await fetch(`http://localhost:3000/api/recipes/${id}`, {
       method: "DELETE",
       cache: "no-store",
     });
+
+    if (!res.ok) {
+      const data = await res.json().catch(() => null);
+      throw new Error(data?.error || "Failed to delete recipe");
+    }
 
     redirect("/recipes");
   }
@@ -40,6 +55,7 @@ export default async function RecipePage({
           <h1 className="text-4xl font-bold text-emerald-700">
             {recipe.title}
           </h1>
+
           {recipe.category && (
             <p className="mt-2 text-sm font-medium uppercase tracking-wide text-emerald-600">
               {recipe.category}
@@ -47,18 +63,20 @@ export default async function RecipePage({
           )}
         </div>
 
-        <div className="flex gap-3">
-          <Link
-            href={`/recipes/${id}/edit`}
-            className="rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
-          >
-            Edit
-          </Link>
+        {isOwner && (
+          <div className="flex gap-3">
+            <Link
+              href={`/recipes/${id}/edit`}
+              className="rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+            >
+              Edit
+            </Link>
 
-          <form action={handleDelete}>
-            <DeleteRecipeButton />
-          </form>
-        </div>
+            <form action={handleDelete}>
+              <DeleteRecipeButton />
+            </form>
+          </div>
+        )}
       </div>
 
       {recipe.description && (
