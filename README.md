@@ -1,36 +1,110 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+<div align="center">
 
-## Getting Started
+# Recipe Vault
 
-First, run the development server:
+A full-stack recipe management application where users can browse, search, and manage their own recipes. Built with modern web technologies and authentication.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+[Deployed Application Link - COMING SOON!]() 
+
+</div>
+
+## Table of Contents 
+
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Running Locally](#running-locally)
+- [Future Improvements](#future-improvements)
+- [Contribute](#how-to-contribute)
+- [Questions/Contact](#questions)
+
+
+## Features
+
+🔍 **Public browsing & search**
+  - View all recipes without logging in
+  - Filter by category
+  - Pagination for performance
+
+🔐 **Authentication (Auth.js / NextAuth)**
+  - Sign up, log in, log out
+  - Secure session-based authentication
+
+👤 **User-specific functionality**
+  - Create, edit, and delete your own recipes
+  - View your personal recipes on the **My Recipes** page
+
+🧾 **Rich recipe data**
+  - Ingredients
+  - Instructions
+  - Prep time, cook time, servings
+  - Category and difficulty
+
+⚡ **Optimized UX**
+  - Debounced search
+  - URL-synced filters
+  - Smart pagination UI
+
+
+## Tech Stack
+
+Frontend
+- Next.js (App Router)
+- React
+- Tailwind CSS
+- TypeScript
+
+Backend
+- Next.js Route Handlers (API)
+- MongoDB + Mongoose
+
+Authentication
+- Auth.js (NextAuth)
+- Credentials provider
+- bcryptjs
+
+
+## Running Locally
+Clone the repository
+
+```
+git clone https://github.com/yourusername/recipe-vault
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Install dependencies and run application
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+npm install
+npm run dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+App runs at:
 
-## Learn More
+```
+http://localhost:3000
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Future Improvements
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Recipe images / uploads
+- Favorites / bookmarking
+- Comments and ratings
+- Improved homepage UI
+- Advanced validation and error handling
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## How to Contribute
 
-## Deploy on Vercel
+Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are greatly appreciated and if you have any suggestions please let me know. 
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Do not forget to give the project a **STAR**⭐. Thank you!
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The Contributor Covenant guidelines are here for your review: [Contributor Covenant](https://www.contributor-covenant.org/).
+
+## Questions
+
+[Link to GitHub Profile](https://github.com/mandi7469)
+
+If you have additional questions please email me at mandi7469@aol.com
+
+## License
+
+MIT License

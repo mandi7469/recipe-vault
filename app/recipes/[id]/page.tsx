@@ -68,21 +68,6 @@ export default async function RecipePage({
             </p>
           )}
         </div>
-
-        {isOwner && (
-          <div className="flex gap-3">
-            <Link
-              href={`/recipes/${id}/edit`}
-              className="rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
-            >
-              Edit
-            </Link>
-
-            <form action={handleDelete}>
-              <DeleteRecipeButton />
-            </form>
-          </div>
-        )}
       </div>
 
       {recipe.description && (
@@ -170,6 +155,21 @@ export default async function RecipePage({
             </ol>
           )}
         </div>
+
+        {isOwner && (
+          <div className="flex gap-3">
+            <Link
+              href={`/recipes/${id}/edit`}
+              className="rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+            >
+              Edit
+            </Link>
+
+            <form action={handleDelete}>
+              <DeleteRecipeButton />
+            </form>
+          </div>
+        )}
       </div>
     </section>
   );

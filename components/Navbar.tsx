@@ -1,18 +1,19 @@
 import Link from "next/link";
 import { auth } from "@/auth";
 import LogoutButton from "@/components/LogoutButton";
+import MobileNavMenu from "@/components/MobileNavMenu";
 
 export default async function Navbar() {
   const session = await auth();
 
   return (
     <header className="border-b bg-white">
-      <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+      <nav className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 sm:px-6">
         <Link href="/" className="text-2xl font-bold text-emerald-600">
           RecipeVault
         </Link>
 
-        <div className="flex items-center gap-6 text-sm font-medium text-gray-700">
+        <div className="hidden items-center gap-6 text-sm font-medium text-gray-700 lg:flex">
           <Link href="/" className="hover:text-emerald-600">
             Home
           </Link>
@@ -53,6 +54,11 @@ export default async function Navbar() {
             </>
           )}
         </div>
+
+        <MobileNavMenu
+          isAuthenticated={Boolean(session?.user)}
+          userName={session?.user?.name ?? null}
+        />
       </nav>
     </header>
   );

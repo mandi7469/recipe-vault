@@ -16,16 +16,16 @@ export default function Home() {
         </p>
       </div>
 
-      <div className="flex gap-4">
+      <div className="flex flex-col gap-3 sm:flex-row sm:gap-4">
         <Link
           href="/recipes"
-          className="rounded-md bg-emerald-600 px-5 py-3 text-white hover:bg-emerald-700"
+          className="w-full rounded-md bg-emerald-600 px-5 py-3 text-center text-white hover:bg-emerald-700 sm:w-auto"
         >
           Browse Recipes
         </Link>
         <Link
           href="/recipes/new"
-          className="rounded-md border border-emerald-600 px-5 py-3 text-emerald-600 hover:bg-emerald-100"
+          className="w-full rounded-md border border-emerald-600 px-5 py-3 text-center text-emerald-600 hover:bg-emerald-100 sm:w-auto"
         >
           Add Your First Recipe
         </Link>

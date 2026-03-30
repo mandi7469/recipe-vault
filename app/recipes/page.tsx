@@ -180,15 +180,17 @@ export default function RecipesPage() {
         {recipes.map((recipe) => (
           <Link key={recipe._id} href={`/recipes/${recipe._id}`}>
             <div className="rounded-lg border border-emerald-200 bg-white p-4 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:border-emerald-400 hover:shadow-lg cursor-pointer">
-              <h2 className="text-xl font-semibold text-emerald-700">
+              <h2 className="text-center text-xl font-semibold text-emerald-700 sm:text-left">
                 {recipe.title}
               </h2>
 
               {recipe.description && (
-                <p className="text-gray-600">{recipe.description}</p>
+                <p className="text-center text-gray-600 sm:text-left">
+                  {recipe.description}
+                </p>
               )}
 
-              <div className="mt-2 flex gap-3 text-sm text-gray-500">
+              <div className="mt-2 flex flex-wrap justify-center gap-2 text-center text-xs text-gray-500 sm:justify-start sm:gap-3 sm:text-left sm:text-sm">
                 {recipe.category && <span>{recipe.category}</span>}
                 {recipe.prepTime && <span>{recipe.prepTime} min prep</span>}
                 {recipe.cookTime && <span>{recipe.cookTime} min cook</span>}
@@ -200,42 +202,49 @@ export default function RecipesPage() {
       </div>
 
       {totalPages > 1 && (
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-          <button
-            onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
-            disabled={page === 1}
-            className="rounded-md border border-gray-300 bg-white px-4 py-2 text-gray-700 disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            Previous
-          </button>
+        <div className="mt-8 overflow-x-auto pb-1 sm:overflow-visible sm:pb-0">
+          <div className="mx-auto flex w-max flex-nowrap items-center justify-center gap-1 sm:w-auto sm:flex-wrap sm:gap-3">
+            <button
+              onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+              disabled={page === 1}
+              className="shrink-0 rounded-md border border-gray-300 bg-white px-2 py-1 text-xs text-gray-700 disabled:cursor-not-allowed disabled:opacity-50 sm:px-4 sm:py-2 sm:text-sm"
+            >
+              <span className="sm:hidden">Prev</span>
+              <span className="hidden sm:inline">Previous</span>
+            </button>
 
-          {getVisiblePages(page, totalPages).map((item, index) =>
-            item === "..." ? (
-              <span key={`ellipsis-${index}`} className="px-2 text-gray-500">
-                ...
-              </span>
-            ) : (
-              <button
-                key={item}
-                onClick={() => setPage(item as number)}
-                className={`rounded-md px-4 py-2 ${
-                  page === item
-                    ? "bg-emerald-600 text-white"
-                    : "border border-gray-300 bg-white text-gray-700 hover:bg-gray-50"
-                }`}
-              >
-                {item}
-              </button>
-            ),
-          )}
+            {getVisiblePages(page, totalPages).map((item, index) =>
+              item === "..." ? (
+                <span
+                  key={`ellipsis-${index}`}
+                  className="shrink-0 px-2 text-gray-500"
+                >
+                  ...
+                </span>
+              ) : (
+                <button
+                  key={item}
+                  onClick={() => setPage(item as number)}
+                  className={`shrink-0 rounded-md px-2 py-1 text-xs sm:px-4 sm:py-2 sm:text-sm ${
+                    page === item
+                      ? "bg-emerald-600 text-white"
+                      : "border border-gray-300 bg-white text-gray-700 hover:bg-gray-50"
+                  }`}
+                >
+                  {item}
+                </button>
+              ),
+            )}
 
-          <button
-            onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
-            disabled={page === totalPages}
-            className="rounded-md border border-gray-300 bg-white px-4 py-2 text-gray-700 disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            Next
-          </button>
+            <button
+              onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
+              disabled={page === totalPages}
+              className="shrink-0 rounded-md border border-gray-300 bg-white px-2 py-1 text-xs text-gray-700 disabled:cursor-not-allowed disabled:opacity-50 sm:px-4 sm:py-2 sm:text-sm"
+            >
+              <span className="sm:hidden">Next</span>
+              <span className="hidden sm:inline">Next</span>
+            </button>
+          </div>
         </div>
       )}
     </section>
