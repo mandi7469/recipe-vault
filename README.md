@@ -4,7 +4,7 @@
 
 A full-stack recipe management application where users can browse, search, and manage their own recipes. Built with modern web technologies and authentication.
 
-[Deployed Application Link - COMING SOON!]() 
+[Recipe Vault - Click Here](https://recipe-vault-ten.vercel.app/) 
 
 </div>
 
