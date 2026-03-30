@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { RECIPE_CATEGORIES } from "@/lib/constants";
 import useDebounce from "@/components/useDebounce";
@@ -16,7 +16,7 @@ type Recipe = {
   difficulty?: string;
 };
 
-export default function RecipesPage() {
+function RecipesPageContent() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -248,5 +248,13 @@ export default function RecipesPage() {
         </div>
       )}
     </section>
+  );
+}
+
+export default function RecipesPage() {
+  return (
+    <Suspense fallback={<section className="py-8 text-gray-500">Loading recipes...</section>}>
+      <RecipesPageContent />
+    </Suspense>
   );
 }
